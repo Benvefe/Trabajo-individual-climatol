@@ -13,6 +13,8 @@ knitr::opts_chunk$set(echo = TRUE)
 ### 1.Generar un diagrama de Walter y Lieth con la data de datcli, este debe llevar de título “Estación Campo de Marte”, a una altitud de 80 msnm durante el año 2017, con los meses simbolizados por números. Las temperaturas deberán visualizarse de color verde; las precipitaciones, en naranja; los meses de congelación segura, en azul y los de congelación probable, en celeste. No trazar una línea suplementaria de precipitación.
 
 install.packages("climatol")
+install.packages("rio")
+
 ```{r}
 library(climatol)
 ```
@@ -46,8 +48,20 @@ homogen("tmax",2001,2003,std=2,ndec=2,gp=3,expl=T)
 ### 4. Recortar la data mensual de Ptest desde 1965 hasta 2005. Homogeneizar dicha data mediante clústers o áreas rectangulares, con un ancho de superposición de 0, mediante una estandarización y con gráficos de totales anuales en el análisis exploratorio de datos. Mostrar las medias de las series homogeneizadas en un archivo Excel que, además, mencione los totales anuales y los datos de la latitud, longitud y nombre de cada estación (utilizar dos decimales).
 
 ```{r}
-
+data(Ptest)
+write.table(dat, "Ptest_1951-2010.dat",row.names = F, col.names = F)
+write.table(est.c, "Ptest_1951-2010.est",row.names = F, col.names = F)
+datsubset("Ptest", 1951,2010,1965,2005,1)
+read.table("Ptest_1965-2005.dat")
+homogsplit("Ptest",1965,2005,44,-108,0,0,std=3,nm=0,ndec = 2,gp=4)
 ```
+
+```{r}
+"Ptest_1965-2005.dat"
+library(rio)
+export(est.c,"Petest_tarea.xlsx")
+```
+
 
 ### 5. Con la data homogenizada del ejercicio anterior (si no se ha realizado, iniciar homogeneizando tal cual se menciona en el ejercicio 4) plotear un gráfico de calor con las medias de precipitación mensual de acuerdo con la latitud y longitud, este debe abarcar desde el punto 2.1°E 39.1°N hasta el punto 3.5°E 40°N, con una separación de 0.001 entre líneas. Además, debe tener un título principal y etiquetado en ambos ejes. Adicionalmente, plotear un mapa de la zona del mundo en cuestión encima de dicho gráfico (use col=rainbow(100)).
 
